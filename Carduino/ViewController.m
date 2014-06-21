@@ -8,7 +8,11 @@
 
 #import "ViewController.h"
 
+
 @interface ViewController ()
+@property (strong, nonatomic) IBOutlet UISlider *steerSlider;
+@property (strong, nonatomic) IBOutlet UIImageView *steerSliderThumbImage;
+- (IBAction)steerSlider:(id)sender;
 
 @end
 
@@ -18,6 +22,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    [self.steerSlider setThumbImage:[UIImage imageNamed:@"track-thumb.png"] forState:UIControlStateNormal];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -26,4 +32,9 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)steerSlider:(id)sender {
+    
+    //[self.steerSlider setThumbImage:[UIImage imageNamed:@"track-thumb.png"] forState:UIControlStateNormal];
+
+}
 @end
