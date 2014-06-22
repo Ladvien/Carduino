@@ -32,11 +32,21 @@
                                 <rect key="frame" x="343" y="157" width="49" height="49"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="125" minValue="0.0" maxValue="250" translatesAutoresizingMaskIntoConstraints="NO" id="H2d-ZX-pel">
-                                <rect key="frame" x="62" y="157" width="175" height="31"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QaM-bZ-kbg">
+                                <rect key="frame" x="26" y="18" width="69" height="38"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="125" minValue="0.0" maxValue="250" translatesAutoresizingMaskIntoConstraints="NO" id="L5O-se-6aZ">
+                                <rect key="frame" x="67" y="157" width="165" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
-                                    <action selector="steerSlider:" destination="vXZ-lx-hvc" eventType="valueChanged" id="Aaf-j6-jmF"/>
+                                    <action selector="steerSlider:" destination="vXZ-lx-hvc" eventType="valueChanged" id="vYw-lW-UEK"/>
+                                    <action selector="steerSliderTouchDown:" destination="vXZ-lx-hvc" eventType="touchDown" id="4fi-GG-204"/>
+                                    <action selector="steerSliderTouchUp:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="O4N-A0-G2q"/>
+                                    <action selector="steerSliderTouchUpOutside:" destination="vXZ-lx-hvc" eventType="touchUpOutside" id="Sle-zI-Wll"/>
                                 </connections>
                             </slider>
                         </subviews>
@@ -45,7 +55,8 @@
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
-                        <outlet property="steerSlider" destination="H2d-ZX-pel" id="KgG-pu-fDL"/>
+                        <outlet property="steerLabel" destination="QaM-bZ-kbg" id="RlU-48-2EE"/>
+                        <outlet property="steerSlider" destination="L5O-se-6aZ" id="FH3-XC-C2u"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
