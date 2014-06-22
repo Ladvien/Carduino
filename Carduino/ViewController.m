@@ -32,28 +32,35 @@
 	// Do any additional setup after loading the view, typically from a nib.
     [self.steerSlider setThumbImage:[UIImage imageNamed:@"track-thumb.png"] forState:UIControlStateNormal];
     [self.steerSlider setMaximumTrackImage:[UIImage alloc] forState:UIControlStateNormal];
+    
+
 
 }
 
 - (void)tick{
     {
-        if (self.steerSlider.value > 126)
+
+        int steerSliderAsInt = lroundf(self.steerSlider.value);
+        
+        if(steerSliderAsInt == 125)
+        {
+            [self.startTimer invalidate];
+            self.startTimer = nil;
+            NSLog(@"Invalidated");
+        }
+        
+        else if (steerSliderAsInt > 125)
         {
             self.steerSlider.value = (self.steerSlider.value -1);
             //self.steerSlider.value = 125;
         }
-        else if (self.steerSlider.value < 124)
+        else if (steerSliderAsInt < 125)
         {
             self.steerSlider.value = (self.steerSlider.value + 1);
             //self.steerSlider.value = 125;
-            
-        }
-        else if(self.steerSlider.value == 125)
-        {
-            [self.startTimer invalidate];
-            self.startTimer = nil;
         }
 
+        self.steerLabel.text = [NSString stringWithFormat:@"%i", steerSliderAsInt];
     }
 }
 
@@ -76,19 +83,21 @@
 }
 
 - (IBAction)steerSliderTouchUp:(id)sender {
-    self.startTimer = [NSTimer scheduledTimerWithTimeInterval:.001
-                                                       target:self
-                                                     selector:@selector(tick)
-                                                     userInfo:nil
-                                                    repeats:YES];
-}
-
-- (IBAction)steerSliderTouchUpOutside:(id)sender {
-    self.startTimer = [NSTimer scheduledTimerWithTimeInterval:.001
+    self.startTimer = [NSTimer scheduledTimerWithTimeInterval:.0001
                                                        target:self
                                                      selector:@selector(tick)
                                                      userInfo:nil
                                                       repeats:YES];
+}
+
+- (IBAction)steerSliderTouchUpOutside:(id)sender {
+    self.startTimer = [NSTimer scheduledTimerWithTimeInterval:.0001
+                                                       target:self
+                                                     selector:@selector(tick)
+                                                     userInfo:nil
+                                                      repeats:YES];
+    
+    CATransition *transition = [CATransition animation];
 }
 - (IBAction)steerSliderTouchDown:(id)sender {
     [self.startTimer invalidate];
