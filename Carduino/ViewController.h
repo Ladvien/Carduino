@@ -10,4 +10,5 @@
 
 @interface ViewController : UIViewController
 @property (nonatomic, retain) NSTimer *startTimer;
+@property (nonatomic, retain) NSTimer *rssiTimer;
 @end

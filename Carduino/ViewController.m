@@ -15,12 +15,21 @@
 @property (strong, nonatomic) IBOutlet UIImageView *steerSliderThumbImage;
 @property (strong, nonatomic) IBOutlet UILabel *steerLabel;
 @property (strong, nonatomic) IBOutlet UISlider *steerSlider;
-- (IBAction)steerSliderTouchDown:(id)sender;
+@property (strong, nonatomic) IBOutlet UISlider *accelerationSlider;
 
-//Actions
+
+// Steer slider.
 - (IBAction)steerSlider:(id)sender;
 - (IBAction)steerSliderTouchUp:(id)sender;
 - (IBAction)steerSliderTouchUpOutside:(id)sender;
+- (IBAction)steerSliderTouchDown:(id)sender;
+
+// Accceleration slider.
+- (IBAction)accelerationSlider:(id)sender;
+- (IBAction)accelerationSliderTouchUp:(id)sender;
+- (IBAction)accelerationSliderTouchUpOutside:(id)sender;
+- (IBAction)accelerationSliderTouchDown:(id)sender;
+
 
 @end
 
@@ -33,7 +42,15 @@
     [self.steerSlider setThumbImage:[UIImage imageNamed:@"track-thumb.png"] forState:UIControlStateNormal];
     [self.steerSlider setMaximumTrackImage:[UIImage alloc] forState:UIControlStateNormal];
     
-
+    [self.accelerationSlider setThumbImage:[UIImage imageNamed:@"track-thumb.png"] forState:UIControlStateNormal];
+    [self.accelerationSlider setMaximumTrackImage:[UIImage alloc] forState:UIControlStateNormal];
+    self.accelerationSlider.transform = CGAffineTransformMakeRotation(M_PI_2);
+    
+    self.rssiTimer = [NSTimer scheduledTimerWithTimeInterval:.1
+                                                       target:self
+                                                     selector:@selector(tick)
+                                                     userInfo:nil
+                                                      repeats:YES];
 
 }
 
@@ -44,23 +61,21 @@
         
         if(steerSliderAsInt == 125)
         {
-            [self.startTimer invalidate];
-            self.startTimer = nil;
-            NSLog(@"Invalidated");
+            if (self.startTimer) {
+                [self.startTimer invalidate];
+                self.startTimer = nil;
+                self.steerLabel.text = [NSString stringWithFormat:@"%i", steerSliderAsInt];
+                NSLog(@"Invalidated");
+            }
         }
-        
         else if (steerSliderAsInt > 125)
         {
-            self.steerSlider.value = (self.steerSlider.value -1);
-            //self.steerSlider.value = 125;
+            self.steerSlider.value--;
         }
         else if (steerSliderAsInt < 125)
         {
-            self.steerSlider.value = (self.steerSlider.value + 1);
-            //self.steerSlider.value = 125;
+            self.steerSlider.value++;
         }
-
-        self.steerLabel.text = [NSString stringWithFormat:@"%i", steerSliderAsInt];
     }
 }
 
@@ -83,24 +98,41 @@
 }
 
 - (IBAction)steerSliderTouchUp:(id)sender {
-    self.startTimer = [NSTimer scheduledTimerWithTimeInterval:.0001
+    if(!self.startTimer){
+        self.startTimer = [NSTimer scheduledTimerWithTimeInterval:.0001
                                                        target:self
                                                      selector:@selector(tick)
                                                      userInfo:nil
                                                       repeats:YES];
+    }
 }
 
 - (IBAction)steerSliderTouchUpOutside:(id)sender {
-    self.startTimer = [NSTimer scheduledTimerWithTimeInterval:.0001
-                                                       target:self
-                                                     selector:@selector(tick)
-                                                     userInfo:nil
-                                                      repeats:YES];
-    
-    CATransition *transition = [CATransition animation];
+    if(!self.startTimer){
+        self.startTimer = [NSTimer scheduledTimerWithTimeInterval:.0001
+                                                           target:self
+                                                         selector:@selector(tick)
+                                                         userInfo:nil
+                                                          repeats:YES];
+    }
 }
+
 - (IBAction)steerSliderTouchDown:(id)sender {
     [self.startTimer invalidate];
     self.startTimer = nil;
+}
+- (IBAction)accelerationSlider:(id)sender {
+}
+
+- (IBAction)accelerationSliderTouchUp:(id)sender {
+}
+
+
+
+- (IBAction)accelerationSliderTouchUpOutside:(id)sender {
+
+}
+
+- (IBAction)accelerationSliderTouchDown:(id)sender {
 }
 @end
