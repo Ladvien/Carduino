@@ -468,6 +468,7 @@
 				2002FB771955EF38009F9741 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2002FB781955EF38009F9741 /* Build configuration list for PBXNativeTarget "CarduinoTests" */ = {
 			isa = XCConfigurationList;
@@ -476,6 +477,7 @@
 				2002FB7A1955EF38009F9741 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
