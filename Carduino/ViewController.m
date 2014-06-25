@@ -9,7 +9,7 @@
 #import "ViewController.h"
 
 
-@interface ViewController ()
+@interface ViewController () <UITableViewDataSource, UITableViewDelegate>
 
 // Timers.
 @property (nonatomic, retain) NSTimer *steerSliderRecoilTimer;
@@ -89,7 +89,15 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+{
+    return nil;
+}
 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    return nil;
+}
 
 # pragma mark - Steer Slider
 

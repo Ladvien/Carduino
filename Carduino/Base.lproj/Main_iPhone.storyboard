@@ -61,10 +61,36 @@
                                 <rect key="frame" x="103" y="50" width="312" height="218"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="WhB-LH-Dda">
-                                        <rect key="frame" x="20" y="58" width="250" height="132"/>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="33" sectionHeaderHeight="22" sectionFooterHeight="22" id="WhB-LH-Dda">
+                                        <rect key="frame" x="31" y="58" width="250" height="132"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <prototypes>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="LbB-xn-maE" detailTextLabel="dGX-sV-GBz" rowHeight="33" style="IBUITableViewCellStyleSubtitle" id="CKy-Xk-JNb">
+                                                <rect key="frame" x="0.0" y="22" width="250" height="33"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CKy-Xk-JNb" id="gkJ-JM-Hz2">
+                                                    <rect key="frame" x="0.0" y="0.0" width="250" height="32"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="LbB-xn-maE">
+                                                            <rect key="frame" x="15" y="-2" width="34" height="22"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dGX-sV-GBz">
+                                                            <rect key="frame" x="15" y="20" width="43" height="15"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                        </prototypes>
                                     </tableView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="iKr-qq-9BM">
                                         <rect key="frame" x="20" y="20" width="58" height="30"/>
@@ -111,7 +137,6 @@
                     <connections>
                         <outlet property="accelerationLabel" destination="Ak0-1V-Ep8" id="S8o-ZV-p1i"/>
                         <outlet property="accelerationSlider" destination="wO0-yn-IMj" id="QaU-VW-bXb"/>
-                        <outlet property="bleScanTableView" destination="WhB-LH-Dda" id="DgN-kE-3s6"/>
                         <outlet property="devicesView" destination="NnE-ni-7Yr" id="ShG-1h-Sth"/>
                         <outlet property="steerLabel" destination="QaM-bZ-kbg" id="RlU-48-2EE"/>
                         <outlet property="steerSlider" destination="L5O-se-6aZ" id="FH3-XC-C2u"/>
