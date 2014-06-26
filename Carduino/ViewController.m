@@ -107,13 +107,13 @@
 
 ////////////////////// Bluetooth Low Energy /////////////////////
 
-//Make sure iOS BT is on.  Then start scanning.
+// Make sure iOS BT is on.  Then start scanning.
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
     // You should test all scenarios
     if (central.state != CBCentralManagerStatePoweredOn) {
-        //In case Bluetooth is off.
+        // In case Bluetooth is off.
         return;
-        //Need to add code here stating unable to access Bluetooth.
+        // Need to add code here stating unable to access Bluetooth.
     }
     if (central.state == CBCentralManagerStatePoweredOn) {
         //If it's on, scan for devices.
@@ -197,8 +197,6 @@
     return [RSSI.RSSI intValue];
 }
 
-
-
 - (UITableViewCell *)tableView: (UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -222,21 +220,25 @@
     
     /////////////////////////LOADS CUSTOM CELL/////////////////////////////
     
-    //This is a handle for the tableView.
+    // This is a handle for the tableView.
     static NSString * carduinoTableIdentifier = @"iPadCarduinoTableCell";
     
     
-    //Get cell objects.;
+    // Get cell objects.;
     CarduinoViewCell *cell = (CarduinoViewCell *)[tableView dequeueReusableCellWithIdentifier:carduinoTableIdentifier];
-    //If cell is equal to nil....
+    // If cell is equal to nil....
     if (cell == nil){
-        
-        //cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:carduinoTableIdentifier];
+        // Load the custom cell.
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:carduinoTableIdentifier owner:self options:nil];
+        // Use the prototype.
         cell = [nib objectAtIndex:0];
-    }    /////////////////////////END/////////////////////////////
+    }
     
+    /////////////////////////END/////////////////////////////
+    
+    // List all the devices in the table view.
     if([indexPath row] < [uuids count]){
+        // Don't list a device if there isn't one.
         if (devices)
         {
             cell.deviceNameLabel.text = [devices name];
@@ -244,25 +246,12 @@
         }
     }
     
-    //Set the text of the cell to the deviceList.
-    //cell.deviceNameLabel.text = [deviceList objectAtIndex:indexPath.row];
-    
-    //Add image on the left of each cell.
+    // Add image on the left of each cell.
     cell.deviceImage.image = [UIImage imageNamed:@"oshw-logo-black.png"];
-    //Sets background color for the cells.  Alpha = opacity.  Float, 0-1.
-    //Will be used for device distance indication.  Let's have it as a base int.
+    // Sets background color for the cells.  Alpha = opacity.  Float, 0-1.
+    // Will be used for device distance indication.  Let's have it as a base int.
     
-    //[devices readRSSI];
-    
-    //NSNumber *blah = devices.RSSI;
-    //intRSSI = [devices.RSSI;
-    
-    //Let's go ahead and convert it from a negative number.
-    //intRSSI = intRSSI * -1;
-    
-    //Print it out for fun.
-    //NSLog(@"%@", blah);
-    
+    // Set the background color of the cells.
     cell.backgroundColor = [UIColor colorWithRed:1 green:1 blue:(1) alpha:1];
     
     return cell;
@@ -271,39 +260,36 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // Create a sorted array of the found UUIDs.
     NSArray * uuids = [[self.devices allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
         return [obj1 compare:obj2];
     }];
-    //CBPeripheral * selectedPeripheral = nil;
-    //CBService * service = nil;
+
+    // Only get enough devices or listed cells.
     if ([indexPath row] < [uuids count])
     {
-        
+        // Set the peripheral based upon the indexPath; uuid being the array.
         _selectedPeripheral = [self.devices objectForKey:[uuids objectAtIndex:[indexPath row]]];
-        //service = [peri.services ]
         
+        // If there is a peripheral.
         if (_selectedPeripheral)
         {
+            // Connect to selected peripheral.
             [_centralManager connectPeripheral:_selectedPeripheral options:nil];
-            //NSString * periChar = peri.services.
-            
-            //[self.conindicator startAnimating];
+            // Hide the devices list.            
+            [UIView beginAnimations:@"fade in" context:nil];
+            [UIView setAnimationDuration:1.0];
+            self.devicesView.alpha = 0;
+            [UIView commitAnimations];
         }
-        //[peri discoverCharacteristics:characteristics forService:service]; //[uuids objectAtIndex:[indexPath row]]];
-        //for (int i = 0; i < [characteristics count]; i++){
-        
-        
-        
-        
-        //NSLog(@"%@ ", [characteristics objectAtIndex:i]);
-        
     }
-    
+}
+
+- (IBAction)startFade:(id)sender {
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     
 }
 
@@ -480,13 +466,19 @@
 - (IBAction)menuButtonTouchUp:(id)sender {
     
     // Reveal the devices list.
-    self.devicesView.hidden = FALSE;
+    [UIView beginAnimations:@"fade in" context:nil];
+    [UIView setAnimationDuration:1.0];
+    self.devicesView.alpha = 1;
+    [UIView commitAnimations];
 }
 
 - (IBAction)backFromDevices:(id)sender
 {
     // Hide the devices list.
-    self.devicesView.hidden = TRUE;
+    [UIView beginAnimations:@"fade in" context:nil];
+    [UIView setAnimationDuration:1.0];
+    self.devicesView.alpha = 0;
+    [UIView commitAnimations];
 }
 
 

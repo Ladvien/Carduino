@@ -57,7 +57,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view hidden="YES" contentMode="scaleToFill" id="NnE-ni-7Yr">
+                            <view alpha="0.0" contentMode="scaleToFill" id="NnE-ni-7Yr">
                                 <rect key="frame" x="103" y="50" width="312" height="218"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
