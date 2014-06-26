@@ -91,6 +91,10 @@
                                                 </tableViewCellContentView>
                                             </tableViewCell>
                                         </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="vXZ-lx-hvc" id="2tG-ig-RFc"/>
+                                            <outlet property="delegate" destination="vXZ-lx-hvc" id="c4u-u5-i9K"/>
+                                        </connections>
                                     </tableView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="iKr-qq-9BM">
                                         <rect key="frame" x="20" y="20" width="58" height="30"/>
@@ -99,14 +103,14 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9Bp-IU-I8f">
-                                        <rect key="frame" x="235" y="20" width="35" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="K35-st-C3i">
+                                        <rect key="frame" x="234" y="20" width="58" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Back">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="backFromDevices:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="5qB-ZQ-Vfk"/>
+                                            <action selector="backFromDevices:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="7hy-qH-CsC"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -137,9 +141,12 @@
                     <connections>
                         <outlet property="accelerationLabel" destination="Ak0-1V-Ep8" id="S8o-ZV-p1i"/>
                         <outlet property="accelerationSlider" destination="wO0-yn-IMj" id="QaU-VW-bXb"/>
+                        <outlet property="backFromDevices" destination="K35-st-C3i" id="MN0-4F-YZz"/>
                         <outlet property="devicesView" destination="NnE-ni-7Yr" id="ShG-1h-Sth"/>
+                        <outlet property="scanForDevices" destination="iKr-qq-9BM" id="p8h-lG-vpQ"/>
                         <outlet property="steerLabel" destination="QaM-bZ-kbg" id="RlU-48-2EE"/>
                         <outlet property="steerSlider" destination="L5O-se-6aZ" id="FH3-XC-C2u"/>
+                        <outlet property="tableView" destination="WhB-LH-Dda" id="XZH-Ww-q87"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>

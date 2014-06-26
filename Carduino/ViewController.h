@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+#import "CarduinoViewCell.h"
 
 @interface ViewController : UIViewController 
+@property (strong, nonatomic) CBCentralManager *centralManager;
+@property (strong, nonatomic) NSMutableDictionary *devices;
+@property (strong, nonatomic) CBPeripheral *discoveredPeripheral;
+@property (strong, nonatomic) NSMutableData *data;
+@property (strong, nonatomic) CBPeripheral *selectedPeripheral;
+@property (strong, nonatomic) CBCharacteristic *characteristics;
+@property (readonly, nonatomic) CFUUIDRef UUID;
 @end
