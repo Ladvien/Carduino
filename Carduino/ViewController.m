@@ -6,10 +6,19 @@
 //  Copyright (c) 2014 Honeysuckle Hardware. All rights reserved.
 //
 
+//  STUFF TO ADD:
+// 1. Periodic refresh timer on devices list.  Then, remove "Scan" button.  This will refresh device list for RSSI as well.
+// 2. Change fade in / fade out to a method.
+// 3.
+
 #import "ViewController.h"
 #import "CarduinoViewCell.h"
 
 @interface ViewController () <CBPeripheralDelegate, CBCentralManagerDelegate, UITableViewDelegate, UITableViewDataSource>
+
+- (void)fadeDeviceMenuIn;
+- (void)fadeDeviceMenuOut;
+
 
 // Timers.
 @property (nonatomic, retain) NSTimer *steerSliderRecoilTimer;
@@ -25,6 +34,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *accelerationLabel;
 
 @property (strong, nonatomic) IBOutlet UIView *devicesView;
+@property (strong, nonatomic) IBOutlet UILabel *RSSI;
 
 //Buttons in Devices Table.
 @property (strong, nonatomic) IBOutlet UIButton *backFromDevices;
@@ -107,6 +117,15 @@
 
 ////////////////////// Bluetooth Low Energy /////////////////////
 
+- (int)readRSSI
+{
+    CBPeripheral *thisPer = _selectedPeripheral;
+    [thisPer readRSSI];
+    
+    int RSSI = [thisPer.RSSI intValue];
+    return RSSI;
+}
+
 // Make sure iOS BT is on.  Then start scanning.
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central {
     // You should test all scenarios
@@ -138,9 +157,6 @@
     
     // Discover services for peripheral.
     [peripheral discoverServices:nil];
-    
-    //Stop looking for devices.
-    [_centralManager connectPeripheral:peripheral options:nil];
     
     //Refresh data in the table.
     [self.tableView reloadData];
@@ -174,6 +190,37 @@
     [peripheral discoverServices:nil];
 }
 
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
+{
+    for (CBService * service in [peripheral services])
+    {
+        [_selectedPeripheral discoverCharacteristics:nil forService:service];
+    }
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
+{
+    for (CBCharacteristic * character in [service characteristics])
+    {
+        [_selectedPeripheral discoverDescriptorsForCharacteristic:character];
+    }
+}
+
+- (void)sendValue:(NSString *) str
+{
+
+    for (CBService * service in [_selectedPeripheral services])
+    {
+        
+        for (CBCharacteristic * characteristic in [service characteristics])
+        {
+                NSLog(@"BLAHAHAHAHAHAHA!!");
+            [_selectedPeripheral writeValue:[str dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:characteristic type:CBCharacteristicWriteWithoutResponse];
+            NSLog(@"BLAH: %@", characteristic);
+        }
+    }
+}
+
 ////////////////////// Bluetooth Low Energy End //////////////////
 
 
@@ -191,16 +238,9 @@
     return [self.devices count];
 }
 
--(int)readRSSI
-{
-    CBPeripheral * RSSI = nil;
-    return [RSSI.RSSI intValue];
-}
 
 - (UITableViewCell *)tableView: (UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    NSLog(@"BLAHAHAHAHAHAHA!!");
     
     // This gets a sorted array from NSMutableDictionary.
     NSArray * uuids = [[self.devices allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
@@ -274,6 +314,8 @@
         // If there is a peripheral.
         if (_selectedPeripheral)
         {
+            // Close current connection.
+            [_centralManager cancelPeripheralConnection:_selectedPeripheral];
             // Connect to selected peripheral.
             [_centralManager connectPeripheral:_selectedPeripheral options:nil];
             // Hide the devices list.            
@@ -307,10 +349,15 @@
 
 // Slider changes value.
 - (IBAction)steerSlider:(id)sender {
+    
+    [_selectedPeripheral readRSSI];
+    self.RSSI.text = [_selectedPeripheral.RSSI stringValue];
+    
     // Round the float.
     int steerSliderAsInt = lroundf(self.steerSlider.value);
     // Set steerLabel text to float value.
     self.steerLabel.text = [NSString stringWithFormat:@"%i", steerSliderAsInt];
+    [self sendValue:[NSString stringWithFormat:@"%i", steerSliderAsInt]];
 }
 
 // User touches Steer Slider.
@@ -394,6 +441,7 @@
     int accelerationSliderAsInt = lroundf(self.accelerationSlider.value);
     // Set Acceleration text to float value.
     self.accelerationLabel.text = [NSString stringWithFormat:@"%i", accelerationSliderAsInt];
+    [self sendValue:[NSString stringWithFormat:@"%i", accelerationSliderAsInt]];
 }
 
 - (IBAction)accelerationSliderTouchDown:(id)sender {
@@ -467,7 +515,7 @@
     
     // Reveal the devices list.
     [UIView beginAnimations:@"fade in" context:nil];
-    [UIView setAnimationDuration:1.0];
+    [UIView setAnimationDuration:.30];
     self.devicesView.alpha = 1;
     [UIView commitAnimations];
 }
@@ -476,11 +524,18 @@
 {
     // Hide the devices list.
     [UIView beginAnimations:@"fade in" context:nil];
-    [UIView setAnimationDuration:1.0];
+    [UIView setAnimationDuration:.30];
     self.devicesView.alpha = 0;
     [UIView commitAnimations];
 }
 
-
+- (void)fadeDeviceMenuIn;
+{
+    
+}
+- (void)fadeDeviceMenuOut;
+{
+    
+}
 @end
 
