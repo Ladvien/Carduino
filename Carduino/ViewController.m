@@ -16,8 +16,6 @@
 
 @interface ViewController () <CBPeripheralDelegate, CBCentralManagerDelegate, UITableViewDelegate, UITableViewDataSource>
 
-- (void)fadeDeviceMenuIn;
-- (void)fadeDeviceMenuOut;
 
 
 // Timers.
@@ -38,6 +36,7 @@
 
 //Buttons in Devices Table.
 @property (strong, nonatomic) IBOutlet UIButton *backFromDevices;
+@property (strong, nonatomic) IBOutlet UIButton *test;
 
 //BLE
 @property (strong, nonatomic) IBOutlet UIButton *scanForDevices;
@@ -71,8 +70,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
     
+
     
     // Setup shadow for Devices TableView.
     self.devicesView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -106,6 +105,7 @@
                                                       repeats:YES];
     
     _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -214,9 +214,28 @@
         
         for (CBCharacteristic * characteristic in [service characteristics])
         {
-                NSLog(@"BLAHAHAHAHAHAHA!!");
+
+            // SEND STRING
+            // DIR-MA  DIR-MB  PWM-MA  PWMA-MB EOTC
+            //  0-1      0-1    0-255  0-255    :
+            //NSLog(@"%i %i", steeringValue, accelerationValue);
+            
+            
+            // if steer < 0
+            // steer = steer * - 1
+            
+            
+            NSMutableData *myData = [NSMutableData data];
+            
+            [myData appendBytes:&steeringValue length:sizeof(unsigned char)];
+            [myData appendBytes:&accelerationValue length:sizeof(unsigned char)];
+            //[myData appendBytes:0xff];
+            
+            NSString * strData = [[NSString alloc] initWithData:myData encoding:NSASCIIStringEncoding];
+            
+            str = [NSString stringWithFormat:@"%@:", strData];
+
             [_selectedPeripheral writeValue:[str dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:characteristic type:CBCharacteristicWriteWithoutResponse];
-            NSLog(@"BLAH: %@", characteristic);
         }
     }
 }
@@ -327,9 +346,6 @@
     }
 }
 
-- (IBAction)startFade:(id)sender {
-}
-
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -354,10 +370,10 @@
     self.RSSI.text = [_selectedPeripheral.RSSI stringValue];
     
     // Round the float.
-    int steerSliderAsInt = lroundf(self.steerSlider.value);
+    steeringValue = lroundf(self.steerSlider.value);
     // Set steerLabel text to float value.
-    self.steerLabel.text = [NSString stringWithFormat:@"%i", steerSliderAsInt];
-    [self sendValue:[NSString stringWithFormat:@"%i", steerSliderAsInt]];
+    self.steerLabel.text = [NSString stringWithFormat:@"%i", steeringValue];
+    [self sendValue:[NSString stringWithFormat:@"%i", steeringValue]];
 }
 
 // User touches Steer Slider.
@@ -402,10 +418,10 @@
 - (void)steerSliderTick{
     {
         // Round the Steer Slider value.
-        int steerSliderAsInt = lroundf(self.steerSlider.value);
+        steeringValue = lroundf(self.steerSlider.value);
         
         // Slider is at middle.
-        if(steerSliderAsInt == 125)
+        if(steeringValue == 125)
         {
             // Only cancel the timer if it is going.
             if (self.steerSliderRecoilTimer) {
@@ -413,17 +429,17 @@
                 [self.steerSliderRecoilTimer invalidate];
                 self.steerSliderRecoilTimer = nil;
                 // Update Steer Slider label.
-                self.steerLabel.text = [NSString stringWithFormat:@"%i", steerSliderAsInt];
+                self.steerLabel.text = [NSString stringWithFormat:@"%i", steeringValue];
                 NSLog(@"Invalidated");
             }
         }
         
-        else if (steerSliderAsInt > 125)
+        else if (steeringValue > 125)
         {
             // De-increment Steer Slider.
             self.steerSlider.value--;
         }
-        else if (steerSliderAsInt < 125)
+        else if (steeringValue < 125)
         {
             // Increment Steer Slider.
             self.steerSlider.value++;
@@ -438,10 +454,10 @@
 
 - (IBAction)accelerationSlider:(id)sender {
     // Round the float.
-    int accelerationSliderAsInt = lroundf(self.accelerationSlider.value);
+    accelerationValue = lroundf(self.accelerationSlider.value);
     // Set Acceleration text to float value.
-    self.accelerationLabel.text = [NSString stringWithFormat:@"%i", accelerationSliderAsInt];
-    [self sendValue:[NSString stringWithFormat:@"%i", accelerationSliderAsInt]];
+    self.accelerationLabel.text = [NSString stringWithFormat:@"%i", accelerationValue];
+    [self sendValue:[NSString stringWithFormat:@"%i", accelerationValue]];
 }
 
 - (IBAction)accelerationSliderTouchDown:(id)sender {
@@ -480,10 +496,10 @@
 - (void)accelerationSliderTick
 {
     // Round the Acceleration Slider value.
-    int accelerationSliderAsInt = lroundf(self.accelerationSlider.value);
+    accelerationValue = lroundf(self.accelerationSlider.value);
     
     // Slider is at middle.
-    if(accelerationSliderAsInt == 125)
+    if(accelerationValue == 125)
     {
         // Only cancel the timer if it is going.
         if (self.accelerationSliderRecoilTimer) {
@@ -491,17 +507,17 @@
             [self.accelerationSliderRecoilTimer invalidate];
             self.accelerationSliderRecoilTimer = nil;
             // Update Acceleration Slider label.
-            self.accelerationLabel.text = [NSString stringWithFormat:@"%i", accelerationSliderAsInt];
+            self.accelerationLabel.text = [NSString stringWithFormat:@"%i", accelerationValue];
             NSLog(@"Invalidated");
         }
     }
     
-    else if (accelerationSliderAsInt > 125)
+    else if (accelerationValue > 125)
     {
         // De-increment Acceleration Slider.
         self.accelerationSlider.value--;
     }
-    else if (accelerationSliderAsInt < 125)
+    else if (accelerationValue < 125)
     {
         // Increment Acceleration Slider.
         self.accelerationSlider.value++;
@@ -512,8 +528,10 @@
 
 // Menu button
 - (IBAction)menuButtonTouchUp:(id)sender {
+    //ViewController * fade = [[ViewController alloc] init];
+    //[fade fadeDeviceMenuIn];
     
-    // Reveal the devices list.
+    // Hide the devices list.
     [UIView beginAnimations:@"fade in" context:nil];
     [UIView setAnimationDuration:.30];
     self.devicesView.alpha = 1;
@@ -522,6 +540,7 @@
 
 - (IBAction)backFromDevices:(id)sender
 {
+
     // Hide the devices list.
     [UIView beginAnimations:@"fade in" context:nil];
     [UIView setAnimationDuration:.30];
@@ -529,9 +548,14 @@
     [UIView commitAnimations];
 }
 
+- (IBAction)test:(id)sender
+{
+    [self sendValue:[NSString stringWithFormat:@"%c:", 250]];
+}
+
 - (void)fadeDeviceMenuIn;
 {
-    
+
 }
 - (void)fadeDeviceMenuOut;
 {

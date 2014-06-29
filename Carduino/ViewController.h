@@ -19,4 +19,13 @@
 @property (strong, nonatomic) CBPeripheral *selectedPeripheral;
 @property (strong, nonatomic) CBCharacteristic *characteristics;
 @property (readonly, nonatomic) CFUUIDRef UUID;
+
+- (void)fadeDeviceMenuIn;
+- (void)fadeDeviceMenuOut;
 @end
+
+//Holds steering slider value as an integer.
+short int steeringValue;
+
+//Holds acceleration slider value as an integer.
+short int accelerationValue;
