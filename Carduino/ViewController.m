@@ -41,6 +41,9 @@
 //BLE
 @property (strong, nonatomic) IBOutlet UIButton *scanForDevices;
 
+@property (assign) uint8_t accelerationByte;
+@property (assign) uint8_t steeringByte;
+
 // Steer slider.
 - (IBAction)steerSlider:(id)sender;
 - (IBAction)steerSliderTouchUp:(id)sender;
@@ -216,22 +219,71 @@
         {
 
             // SEND STRING
-            // DIR-MA  DIR-MB  PWM-MA  PWMA-MB EOTC
-            //  0-1      0-1    0-255  0-255    :
-            //NSLog(@"%i %i", steeringValue, accelerationValue);
-            
-            
-            // if steer < 0
-            // steer = steer * - 1
-            
-            
+            //  DIR-MA    DIR-MB    PWM-MA  PWMA-MB EOTC
+            //  CON Byte  CON Byte   0-255   0-255    :
             NSMutableData *myData = [NSMutableData data];
             
+            // CONTROL BYTE
+            //  BIT: 7=CAN'T BE USED
+            //  BIT: 6=
+            //  BIT: 5=Breaklights ON
+            //  BIT: 4=Headlights ON
+            //  BIT: 3=127+ MOTOR B
+            //  BIT: 2=127+ MOTOR A
+            //  BIT: 1=MOTOR B DIR
+            //  BIT: 0=MOTOR A DIR
+            NSUInteger controlByte = 0;
+            
+            
+            // TEST VAL
+            //accelerationValue = -255;
+            //steeringValue = -255;
+            
+            //Steer value is negative number.
+            if(steeringValue < 0)
+            {
+                // Set the reverse bit.
+                controlByte |= 1 << 0;
+                steeringValue = (steeringValue * -1);
+            }
+            
+            // Acceleration value is a negative number.
+            if(accelerationValue < 0)
+            {
+                // Set the reverse bit.
+                controlByte |= 1 << 1;
+                accelerationValue = (accelerationValue * -1);
+            }
+
+            // If steer motor is greater than 127.
+            if (steeringValue > 127) {
+                // Set the bit indicating 128-255.
+                controlByte |= 1 << 2;
+                // Remove excess from text.label
+                steeringValue -= 128;
+            }
+
+            // If steer motor is greater than 127.
+            if (accelerationValue > 127) {
+                // Set the bit indicating 128-255.
+                controlByte |= 1 << 3;
+                // Remove excess from text.label
+                accelerationValue -= 128;
+            }
+            
+            // Breaklights
+            //controlByte |= 1 << 5;
+            // Headlights
+            //controlByte |= 1 << 4;
+            
+
+            [myData appendBytes:&controlByte length:sizeof(unsigned char)];
             [myData appendBytes:&steeringValue length:sizeof(unsigned char)];
             [myData appendBytes:&accelerationValue length:sizeof(unsigned char)];
-            //[myData appendBytes:0xff];
             
             NSString * strData = [[NSString alloc] initWithData:myData encoding:NSASCIIStringEncoding];
+            
+            NSLog(@"Control: %i Steer: %i, Acc: %i", controlByte, steeringValue, accelerationValue);
             
             str = [NSString stringWithFormat:@"%@:", strData];
 
@@ -421,7 +473,7 @@
         steeringValue = lroundf(self.steerSlider.value);
         
         // Slider is at middle.
-        if(steeringValue == 125)
+        if(steeringValue == 0)
         {
             // Only cancel the timer if it is going.
             if (self.steerSliderRecoilTimer) {
@@ -434,12 +486,12 @@
             }
         }
         
-        else if (steeringValue > 125)
+        else if (steeringValue > 0)
         {
             // De-increment Steer Slider.
             self.steerSlider.value--;
         }
-        else if (steeringValue < 125)
+        else if (steeringValue < 0)
         {
             // Increment Steer Slider.
             self.steerSlider.value++;
@@ -499,7 +551,7 @@
     accelerationValue = lroundf(self.accelerationSlider.value);
     
     // Slider is at middle.
-    if(accelerationValue == 125)
+    if(accelerationValue == 0)
     {
         // Only cancel the timer if it is going.
         if (self.accelerationSliderRecoilTimer) {
@@ -512,12 +564,12 @@
         }
     }
     
-    else if (accelerationValue > 125)
+    else if (accelerationValue > 0)
     {
         // De-increment Acceleration Slider.
         self.accelerationSlider.value--;
     }
-    else if (accelerationValue < 125)
+    else if (accelerationValue < 0)
     {
         // Increment Acceleration Slider.
         self.accelerationSlider.value++;
@@ -525,6 +577,7 @@
 }
 ///////////////////// Acceleration Slider End ///////////
 
+# pragma mark - misc
 
 // Menu button
 - (IBAction)menuButtonTouchUp:(id)sender {
