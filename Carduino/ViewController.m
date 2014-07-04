@@ -14,14 +14,17 @@
 #import "ViewController.h"
 #import "CarduinoViewCell.h"
 
-@interface ViewController () <CBPeripheralDelegate, CBCentralManagerDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface ViewController () 
 
-
+@property (nonatomic, retain) NSString *rxData;
+@property int previousAccelerationSlider;
+@property int counter;
 
 // Timers.
 @property (nonatomic, retain) NSTimer *steerSliderRecoilTimer;
 @property (nonatomic, retain) NSTimer *accelerationSliderRecoilTimer;
 @property (nonatomic, retain) NSTimer *rssiTimer;
+@property (nonatomic, retain) NSTimer *rxResponseTimer;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 //Outlets.
@@ -33,6 +36,7 @@
 
 @property (strong, nonatomic) IBOutlet UIView *devicesView;
 @property (strong, nonatomic) IBOutlet UILabel *RSSI;
+@property (strong, nonatomic) IBOutlet UILabel *rxDataLabel;
 
 //Buttons in Devices Table.
 @property (strong, nonatomic) IBOutlet UIButton *backFromDevices;
@@ -99,6 +103,7 @@
 
     // Turns the acceleration slider vertical.
     self.accelerationSlider.transform = CGAffineTransformMakeRotation(M_PI_2);
+    self.steerSlider.transform = CGAffineTransformMakeRotation(M_PI_2);
     
     //Let's set a timer to refresh RSSI.
     self.rssiTimer = [NSTimer scheduledTimerWithTimeInterval:.1
@@ -191,6 +196,11 @@
     // Set the peripheral method's discoverServices to nil.
     // Does this keep the code from looking for new devices?
     [peripheral discoverServices:nil];
+    
+
+    
+
+    
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
@@ -209,8 +219,33 @@
     }
 }
 
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+{
+    //Store data from the UUID in byte format, save in the bytes variable.
+    const char * bytes =[(NSData*)[[characteristic UUID] data] bytes];
+    //Check to see if it is two bytes long, and they are both FF, FF.
+    if (bytes && strlen(bytes) == 2 && bytes[0] == (char)255 && bytes[1] == (char)225)
+    {
+        NSLog(@"%s", bytes);
+        //Stop the search animation
+        //Setup a MainViewController reference
+        //?
+        //Send the peripheral data to the MainViewController.
+        _selectedPeripheral = peripheral;
+        for (CBService * service in [_selectedPeripheral services])
+        {
+
+            for (CBCharacteristic * characteristic in [service characteristics])
+            {            //NSLog(@"Blah!!");
+                [_selectedPeripheral setNotifyValue:true forCharacteristic:characteristic];
+            }
+        }
+    }
+}
+
 - (void)sendValue:(NSString *) str
 {
+    
 
     for (CBService * service in [_selectedPeripheral services])
     {
@@ -234,17 +269,13 @@
             //  BIT: 0=MOTOR A DIR
             NSUInteger controlByte = 0;
             
-            
-            // TEST VAL
-            //accelerationValue = -255;
-            //steeringValue = -255;
-            
             //Steer value is negative number.
             if(steeringValue < 0)
             {
                 // Set the reverse bit.
                 controlByte |= 1 << 0;
                 steeringValue = (steeringValue * -1);
+                NSLog(@"%i", controlByte);
             }
             
             // Acceleration value is a negative number.
@@ -253,6 +284,7 @@
                 // Set the reverse bit.
                 controlByte |= 1 << 1;
                 accelerationValue = (accelerationValue * -1);
+                NSLog(@"%i", controlByte);
             }
 
             // If steer motor is greater than 127.
@@ -261,6 +293,7 @@
                 controlByte |= 1 << 2;
                 // Remove excess from text.label
                 steeringValue -= 128;
+                NSLog(@"%i", controlByte);
             }
 
             // If steer motor is greater than 127.
@@ -269,6 +302,7 @@
                 controlByte |= 1 << 3;
                 // Remove excess from text.label
                 accelerationValue -= 128;
+                NSLog(@"%i", controlByte);
             }
             
             // Breaklights
@@ -283,13 +317,32 @@
             
             NSString * strData = [[NSString alloc] initWithData:myData encoding:NSASCIIStringEncoding];
             
-            NSLog(@"Control: %i Steer: %i, Acc: %i", controlByte, steeringValue, accelerationValue);
+            //NSLog(@"Control: %i Steer: %i, Acc: %i", controlByte, steeringValue, accelerationValue);
             
             str = [NSString stringWithFormat:@"%@:", strData];
-
+            
+            if ([self.rxData  isEqual: @""]) {
+                //NSLog(@"RX CHECK!");
+                self.rxData = 0;
+            }
+            
+            NSLog(@"%i", [str length]);
+            
             [_selectedPeripheral writeValue:[str dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:characteristic type:CBCharacteristicWriteWithoutResponse];
+                self.rxData = @" ";
+            
+            counter++;
+            NSLog(@"%i", counter);
         }
     }
+}
+
+
+-(void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+{
+    NSString * str = [[NSString alloc] initWithData:[characteristic value] encoding:NSUTF8StringEncoding];
+    self.rxData = str;
+    self.rxDataLabel.text = [NSString stringWithFormat:@"%@", str];
 }
 
 ////////////////////// Bluetooth Low Energy End //////////////////
@@ -426,6 +479,7 @@
     // Set steerLabel text to float value.
     self.steerLabel.text = [NSString stringWithFormat:@"%i", steeringValue];
     [self sendValue:[NSString stringWithFormat:@"%i", steeringValue]];
+
 }
 
 // User touches Steer Slider.
@@ -451,7 +505,9 @@
         // Shrink thumb tracker image.
         [self.steerSlider setThumbImage:[UIImage imageNamed:@"track-thumb.png"] forState:UIControlStateNormal];
     }
-    
+    steeringValue = 0;
+    [self sendValue:[NSString stringWithFormat:@"%i", accelerationValue]];
+
 }
 
 // User touches up outside Steer Slider.
@@ -463,7 +519,10 @@
 
         // Shrink thumb tracker image.
         [self.steerSlider setThumbImage:[UIImage imageNamed:@"track-thumb.png"] forState:UIControlStateNormal];
+        
     }
+    steeringValue = 0;
+    [self sendValue:[NSString stringWithFormat:@"%i", accelerationValue]];
 }
 
 // Timer tick method to control Steer Slider recoil.
@@ -483,6 +542,7 @@
                 // Update Steer Slider label.
                 self.steerLabel.text = [NSString stringWithFormat:@"%i", steeringValue];
                 NSLog(@"Invalidated");
+                [self sendValue:[NSString stringWithFormat:@"%i", accelerationValue]];
             }
         }
         
@@ -506,10 +566,14 @@
 
 - (IBAction)accelerationSlider:(id)sender {
     // Round the float.
-    accelerationValue = lroundf(self.accelerationSlider.value);
+    accelerationValue = self.accelerationSlider.value;
+    
     // Set Acceleration text to float value.
-    self.accelerationLabel.text = [NSString stringWithFormat:@"%i", accelerationValue];
-    [self sendValue:[NSString stringWithFormat:@"%i", accelerationValue]];
+    if (_previousAccelerationSlider != accelerationValue) {
+        self.accelerationLabel.text = [NSString stringWithFormat:@"%i", accelerationValue];
+        [self sendValue:[NSString stringWithFormat:@"%i", accelerationValue]];
+    }
+    _previousAccelerationSlider = accelerationValue;
 }
 
 - (IBAction)accelerationSliderTouchDown:(id)sender {
@@ -531,6 +595,8 @@
         // Shrink thumb tracker image.
         [self.accelerationSlider setThumbImage:[UIImage imageNamed:@"track-thumb.png"] forState:UIControlStateNormal];
     }
+    //accelerationValue = 0;
+    //[self sendValue:[NSString stringWithFormat:@"%i", accelerationValue]];
 }
 
 - (IBAction)accelerationSliderTouchUpOutside:(id)sender {
@@ -542,6 +608,8 @@
         // Shrink thumb tracker image.
         [self.accelerationSlider setThumbImage:[UIImage imageNamed:@"track-thumb.png"] forState:UIControlStateNormal];
     }
+    //accelerationValue = 0;
+    //[self sendValue:[NSString stringWithFormat:@"%i", accelerationValue]];
 }
 
 // 
@@ -555,12 +623,14 @@
     {
         // Only cancel the timer if it is going.
         if (self.accelerationSliderRecoilTimer) {
+            [self sendValue:[NSString stringWithFormat:@"%i", accelerationValue]];
             // Cancel recoil-timer.
             [self.accelerationSliderRecoilTimer invalidate];
             self.accelerationSliderRecoilTimer = nil;
             // Update Acceleration Slider label.
             self.accelerationLabel.text = [NSString stringWithFormat:@"%i", accelerationValue];
             NSLog(@"Invalidated");
+            
         }
     }
     

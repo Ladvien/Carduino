@@ -11,7 +11,7 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "CarduinoViewCell.h"
 
-@interface ViewController : UIViewController 
+@interface ViewController : UIViewController <CBPeripheralDelegate, CBCentralManagerDelegate, UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) CBCentralManager *centralManager;
 @property (strong, nonatomic) NSMutableDictionary *devices;
 @property (strong, nonatomic) CBPeripheral *discoveredPeripheral;
@@ -20,8 +20,11 @@
 @property (strong, nonatomic) CBCharacteristic *characteristics;
 @property (readonly, nonatomic) CFUUIDRef UUID;
 
+@property (strong, nonatomic) CBPeripheral *connectdPeri;
+
 - (void)fadeDeviceMenuIn;
 - (void)fadeDeviceMenuOut;
+- (void)rxResponseCheck;
 @end
 
 //Holds steering slider value as an integer.
@@ -29,3 +32,7 @@ short int steeringValue;
 
 //Holds acceleration slider value as an integer.
 short int accelerationValue;
+
+int counter;
+
+NSUInteger controlByte = 0;
