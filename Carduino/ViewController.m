@@ -253,6 +253,10 @@
         for (CBCharacteristic * characteristic in [service characteristics])
         {
 
+            // Round the float.
+            steeringValue = lroundf(self.steerSlider.value);
+            accelerationValue = lroundf(self.accelerationSlider.value);
+            
             // SEND STRING
             //  DIR-MA    DIR-MB    PWM-MA  PWMA-MB EOTC
             //  CON Byte  CON Byte   0-255   0-255    :
@@ -269,13 +273,16 @@
             //  BIT: 0=MOTOR A DIR
             NSUInteger controlByte = 0;
             
+            //NSLog(@"Begin: %i", controlByte);
+            
             //Steer value is negative number.
             if(steeringValue < 0)
             {
                 // Set the reverse bit.
                 controlByte |= 1 << 0;
                 steeringValue = (steeringValue * -1);
-                NSLog(@"%i", controlByte);
+                //NSLog(@"%i", controlByte);
+                NSLog(@"STEER -");
             }
             
             // Acceleration value is a negative number.
@@ -284,7 +291,8 @@
                 // Set the reverse bit.
                 controlByte |= 1 << 1;
                 accelerationValue = (accelerationValue * -1);
-                NSLog(@"%i", controlByte);
+                //NSLog(@"%i", controlByte);
+                NSLog(@"ACCEL -");
             }
 
             // If steer motor is greater than 127.
@@ -293,7 +301,8 @@
                 controlByte |= 1 << 2;
                 // Remove excess from text.label
                 steeringValue -= 128;
-                NSLog(@"%i", controlByte);
+                //NSLog(@"%i", controlByte);
+                NSLog(@"STEER +127");
             }
 
             // If steer motor is greater than 127.
@@ -302,9 +311,11 @@
                 controlByte |= 1 << 3;
                 // Remove excess from text.label
                 accelerationValue -= 128;
-                NSLog(@"%i", controlByte);
+                //NSLog(@"%x", controlByte);
+                NSLog(@"ACCEL +127");
             }
             
+            //NSLog(@"After: %i", controlByte);
             // Breaklights
             //controlByte |= 1 << 5;
             // Headlights
@@ -326,13 +337,13 @@
                 self.rxData = 0;
             }
             
-            NSLog(@"%i", [str length]);
+            //NSLog(@"%i", [str length]);
             
             [_selectedPeripheral writeValue:[str dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:characteristic type:CBCharacteristicWriteWithoutResponse];
                 self.rxData = @" ";
             
-            counter++;
-            NSLog(@"%i", counter);
+            //counter++;
+            //NSLog(@"%i", counter);
         }
     }
 }
@@ -476,6 +487,7 @@
     
     // Round the float.
     steeringValue = lroundf(self.steerSlider.value);
+    
     // Set steerLabel text to float value.
     self.steerLabel.text = [NSString stringWithFormat:@"%i", steeringValue];
     [self sendValue:[NSString stringWithFormat:@"%i", steeringValue]];
@@ -541,7 +553,7 @@
                 self.steerSliderRecoilTimer = nil;
                 // Update Steer Slider label.
                 self.steerLabel.text = [NSString stringWithFormat:@"%i", steeringValue];
-                NSLog(@"Invalidated");
+                //NSLog(@"Invalidated");
                 [self sendValue:[NSString stringWithFormat:@"%i", accelerationValue]];
             }
         }
@@ -629,7 +641,7 @@
             self.accelerationSliderRecoilTimer = nil;
             // Update Acceleration Slider label.
             self.accelerationLabel.text = [NSString stringWithFormat:@"%i", accelerationValue];
-            NSLog(@"Invalidated");
+            //NSLog(@"Invalidated");
             
         }
     }
