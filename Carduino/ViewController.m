@@ -28,7 +28,6 @@
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 //Outlets.
-@property (strong, nonatomic) IBOutlet UIImageView *steerSliderThumbImage;
 @property (strong, nonatomic) IBOutlet UILabel *steerLabel;
 @property (strong, nonatomic) IBOutlet UISlider *steerSlider;
 @property (strong, nonatomic) IBOutlet UISlider *accelerationSlider;
@@ -49,11 +48,7 @@
 @property (assign) uint8_t accelerationByte;
 @property (assign) uint8_t steeringByte;
 
-// Steer slider.
-//- (IBAction)steerSlider:(id)sender;
-//- (IBAction)steerSliderTouchUp:(id)sender;
-//- (IBAction)steerSliderTouchUpOutside:(id)sender;
-//- (IBAction)steerSliderTouchDown:(id)sender;
+//Steer slider.
 - (IBAction)steerSlider:(id)sender;
 - (IBAction)steerSliderTouchUp:(id)sender;
 - (IBAction)steerSliderTouchUpOutside:(id)sender;

@@ -24,7 +24,6 @@
 
 - (void)fadeDeviceMenuIn;
 - (void)fadeDeviceMenuOut;
-- (void)rxResponseCheck;
 @end
 
 //Holds steering slider value as an integer.

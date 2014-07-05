@@ -21,8 +21,6 @@
 		2002FB681955EF38009F9741 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2002FB471955EF38009F9741 /* UIKit.framework */; };
 		2002FB701955EF38009F9741 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2002FB6E1955EF38009F9741 /* InfoPlist.strings */; };
 		2002FB721955EF38009F9741 /* CarduinoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2002FB711955EF38009F9741 /* CarduinoTests.m */; };
-		2002FB7D1955F287009F9741 /* main_bg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2002FB7B1955F287009F9741 /* main_bg.jpg */; };
-		2002FB7E1955F287009F9741 /* main_bg@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2002FB7C1955F287009F9741 /* main_bg@2x.jpg */; };
 		20B3A228195B947F009C18FD /* CarduinoViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B3A227195B947F009C18FD /* CarduinoViewCell.m */; };
 		20B3A22B195B9496009C18FD /* iPadCarduinoTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20B3A22A195B9496009C18FD /* iPadCarduinoTableCell.xib */; };
 /* End PBXBuildFile section */
@@ -57,8 +55,6 @@
 		2002FB6D1955EF38009F9741 /* CarduinoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CarduinoTests-Info.plist"; sourceTree = "<group>"; };
 		2002FB6F1955EF38009F9741 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2002FB711955EF38009F9741 /* CarduinoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CarduinoTests.m; sourceTree = "<group>"; };
-		2002FB7B1955F287009F9741 /* main_bg.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = main_bg.jpg; sourceTree = "<group>"; };
-		2002FB7C1955F287009F9741 /* main_bg@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "main_bg@2x.jpg"; sourceTree = "<group>"; };
 		20B3A227195B947F009C18FD /* CarduinoViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarduinoViewCell.m; sourceTree = "<group>"; };
 		20B3A229195B948F009C18FD /* CarduinoViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CarduinoViewCell.h; sourceTree = "<group>"; };
 		20B3A22A195B9496009C18FD /* iPadCarduinoTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iPadCarduinoTableCell.xib; sourceTree = "<group>"; };
@@ -128,8 +124,6 @@
 				2002FB5B1955EF38009F9741 /* ViewController.h */,
 				2002FB5C1955EF38009F9741 /* ViewController.m */,
 				2002FB5E1955EF38009F9741 /* Images.xcassets */,
-				2002FB7B1955F287009F9741 /* main_bg.jpg */,
-				2002FB7C1955F287009F9741 /* main_bg@2x.jpg */,
 				2002FB4A1955EF38009F9741 /* Supporting Files */,
 			);
 			path = Carduino;
@@ -254,8 +248,6 @@
 				20B3A22B195B9496009C18FD /* iPadCarduinoTableCell.xib in Resources */,
 				2002FB571955EF38009F9741 /* Main_iPhone.storyboard in Resources */,
 				2002FB4E1955EF38009F9741 /* InfoPlist.strings in Resources */,
-				2002FB7E1955F287009F9741 /* main_bg@2x.jpg in Resources */,
-				2002FB7D1955F287009F9741 /* main_bg.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
