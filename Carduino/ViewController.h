@@ -34,5 +34,3 @@ short int steeringValue;
 short int accelerationValue;
 
 int counter;
-
-NSUInteger controlByte = 0;

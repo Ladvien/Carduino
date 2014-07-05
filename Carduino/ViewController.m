@@ -34,6 +34,7 @@
 @property (strong, nonatomic) IBOutlet UISlider *accelerationSlider;
 @property (strong, nonatomic) IBOutlet UILabel *accelerationLabel;
 
+
 @property (strong, nonatomic) IBOutlet UIView *devicesView;
 @property (strong, nonatomic) IBOutlet UILabel *RSSI;
 @property (strong, nonatomic) IBOutlet UILabel *rxDataLabel;
@@ -49,16 +50,23 @@
 @property (assign) uint8_t steeringByte;
 
 // Steer slider.
+//- (IBAction)steerSlider:(id)sender;
+//- (IBAction)steerSliderTouchUp:(id)sender;
+//- (IBAction)steerSliderTouchUpOutside:(id)sender;
+//- (IBAction)steerSliderTouchDown:(id)sender;
 - (IBAction)steerSlider:(id)sender;
 - (IBAction)steerSliderTouchUp:(id)sender;
 - (IBAction)steerSliderTouchUpOutside:(id)sender;
 - (IBAction)steerSliderTouchDown:(id)sender;
+
 
 // Accceleration slider.
 - (IBAction)accelerationSlider:(id)sender;
 - (IBAction)accelerationSliderTouchUp:(id)sender;
 - (IBAction)accelerationSliderTouchUpOutside:(id)sender;
 - (IBAction)accelerationSliderTouchDown:(id)sender;
+
+// Menu
 - (IBAction)menuButtonTouchUp:(id)sender;
 
 
@@ -77,9 +85,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
 
-    
     // Setup shadow for Devices TableView.
     self.devicesView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.devicesView.layer.shadowOpacity = 0.5f;
@@ -197,10 +203,6 @@
     // Does this keep the code from looking for new devices?
     [peripheral discoverServices:nil];
     
-
-    
-
-    
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
@@ -245,14 +247,10 @@
 
 - (void)sendValue:(NSString *) str
 {
-    
-
     for (CBService * service in [_selectedPeripheral services])
     {
-        
         for (CBCharacteristic * characteristic in [service characteristics])
         {
-
             // Round the float.
             steeringValue = lroundf(self.steerSlider.value);
             accelerationValue = lroundf(self.accelerationSlider.value);
@@ -494,6 +492,7 @@
 
 }
 
+
 // User touches Steer Slider.
 - (IBAction)steerSliderTouchDown:(id)sender {
     
@@ -696,5 +695,7 @@
 {
     
 }
+
+
 @end
 
