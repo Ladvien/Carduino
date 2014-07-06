@@ -22,6 +22,8 @@
 
 @property (strong, nonatomic) CBPeripheral *connectdPeri;
 
+-(float)mapNumber: (float)x minimumXIn:(float)minXIn maximumXIn:(float)maxXIn mimimumXOut:(float)minXOut maximumXOut:(float)maxXOut;
+
 - (void)fadeDeviceMenuIn;
 - (void)fadeDeviceMenuOut;
 @end

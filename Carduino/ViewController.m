@@ -314,6 +314,10 @@
             // Headlights
             //controlByte |= 1 << 4;
             
+            ViewController * numberMapper = [[ViewController alloc] init];
+            
+            NSLog(@"%f", [numberMapper mapNumber:5 minimumIn:0 maximumIn:10 mimimumOut:0 maximumOut:1]);
+            
 
             [myData appendBytes:&controlByte length:sizeof(unsigned char)];
             [myData appendBytes:&steeringValue length:sizeof(unsigned char)];
@@ -691,6 +695,9 @@
     
 }
 
-
+-(float)mapNumber: (float)x minimumIn:(float)minIn maximumIn:(float)maxIn mimimumOut:(float)minOut maximumOut:(float)maxOut;
+{
+    return ((x - minIn) * (maxOut - minOut)/(maxIn - minIn) + minOut);
+}
 @end
 
