@@ -28,6 +28,7 @@
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 //Outlets.
+@property (strong, nonatomic) IBOutlet UIView *mainView;
 @property (strong, nonatomic) IBOutlet UILabel *steerLabel;
 @property (strong, nonatomic) IBOutlet UISlider *steerSlider;
 @property (strong, nonatomic) IBOutlet UISlider *accelerationSlider;
@@ -115,6 +116,16 @@
     
     _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     
+    
+    //UIView *rectView = [[UIView alloc] initWithFrame:CGRectMake(15,15,40,40)];
+    //rectView.backgroundColor = [UIColor clearColor];
+    //rectView.layer.borderColor = [[UIColor blueColor] CGColor];
+    //rectView.layer.borderWidth = 40;
+    //rectView.layer.cornerRadius = 25;
+    //rectView.layer.
+    //[self.mainView addSubview:rectView];
+    // Create a view CGRect frame = [UIScreen mainScreen].bounds;
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -314,11 +325,18 @@
             // Headlights
             //controlByte |= 1 << 4;
             
+            
+            //////////// Convert RSSI Data to Color //////////////////////
+            
             ViewController * numberMapper = [[ViewController alloc] init];
-            
-            NSLog(@"%f", [numberMapper mapNumber:5 minimumIn:0 maximumIn:10 mimimumOut:0 maximumOut:1]);
-            
+            [_selectedPeripheral readRSSI];
+            int rssiRawValue = [_selectedPeripheral.RSSI integerValue];
+            rssiRawValue = rssiRawValue * -1;
+            float rssiColorValue = [numberMapper mapNumber:rssiRawValue minimumIn:55 maximumIn:100 mimimumOut:0 maximumOut:1];
+            NSLog(@"%f", [numberMapper mapNumber:rssiRawValue minimumIn:50 maximumIn:110 mimimumOut:0 maximumOut:1]);
 
+            /////////End Convert RSSI Data to Color //////////////////////
+            
             [myData appendBytes:&controlByte length:sizeof(unsigned char)];
             [myData appendBytes:&steeringValue length:sizeof(unsigned char)];
             [myData appendBytes:&accelerationValue length:sizeof(unsigned char)];
@@ -479,8 +497,7 @@
 // Slider changes value.
 - (IBAction)steerSlider:(id)sender {
     
-    [_selectedPeripheral readRSSI];
-    self.RSSI.text = [_selectedPeripheral.RSSI stringValue];
+
     
     // Round the float.
     steeringValue = lroundf(self.steerSlider.value);

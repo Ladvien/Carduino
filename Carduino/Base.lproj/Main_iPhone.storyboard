@@ -145,6 +145,7 @@
                         <outlet property="accelerationSlider" destination="wO0-yn-IMj" id="QaU-VW-bXb"/>
                         <outlet property="backFromDevices" destination="K35-st-C3i" id="MN0-4F-YZz"/>
                         <outlet property="devicesView" destination="NnE-ni-7Yr" id="ShG-1h-Sth"/>
+                        <outlet property="mainView" destination="kh9-bI-dsS" id="4UT-As-b1S"/>
                         <outlet property="rxData" destination="tkx-rj-nvE" id="opo-ao-zcM"/>
                         <outlet property="scanForDevices" destination="iKr-qq-9BM" id="p8h-lG-vpQ"/>
                         <outlet property="steerLabel" destination="QaM-bZ-kbg" id="RlU-48-2EE"/>
