@@ -10,6 +10,7 @@
 
 @implementation drawView
 
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -19,13 +20,15 @@
     return self;
 }
 
+
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetLineWidth(context, 4.0);
     CGContextSetStrokeColorWithColor(context,[UIColor blueColor].CGColor);
-    CGRect rectangle = CGRectMake(20,20,50,50);
+    CGRect rectangle = CGRectMake(5,5,50,50);
     CGContextAddEllipseInRect(context, rectangle);
     CGContextStrokePath(context);
+    NSLog(@"Blah!!");
 }
 
 

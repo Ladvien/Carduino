@@ -126,8 +126,6 @@
 				2002FB551955EF38009F9741 /* Main_iPhone.storyboard */,
 				2002FB5B1955EF38009F9741 /* ViewController.h */,
 				2002FB5C1955EF38009F9741 /* ViewController.m */,
-				20BC6ED9196C9081009BD993 /* drawView.h */,
-				20BC6EDA196C9081009BD993 /* drawView.m */,
 				2002FB5E1955EF38009F9741 /* Images.xcassets */,
 				2002FB4A1955EF38009F9741 /* Supporting Files */,
 			);
@@ -137,6 +135,8 @@
 		2002FB4A1955EF38009F9741 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				20BC6ED9196C9081009BD993 /* drawView.h */,
+				20BC6EDA196C9081009BD993 /* drawView.m */,
 				2002FB4B1955EF38009F9741 /* Carduino-Info.plist */,
 				2002FB4C1955EF38009F9741 /* InfoPlist.strings */,
 				2002FB4F1955EF38009F9741 /* main.m */,

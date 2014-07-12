@@ -13,8 +13,12 @@
 
 #import "ViewController.h"
 #import "CarduinoViewCell.h"
+#import "drawView.h"
+@interface ViewController ()
 
-@interface ViewController () 
+{
+  // ----->  drawView *drawView;
+}
 
 @property (nonatomic, retain) NSString *rxData;
 @property int previousAccelerationSlider;
@@ -116,17 +120,17 @@
     
     _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     
+    drawView *mV=[[drawView alloc]init];
+    //mV.scale=[txt.text floatValue];
     
-    //UIView *rectView = [[UIView alloc] initWithFrame:CGRectMake(15,15,40,40)];
-    //rectView.backgroundColor = [UIColor clearColor];
-    //rectView.layer.borderColor = [[UIColor blueColor] CGColor];
-    //rectView.layer.borderWidth = 40;
-    //rectView.layer.cornerRadius = 25;
-    //rectView.layer.
-    //[self.mainView addSubview:rectView];
-    // Create a view CGRect frame = [UIScreen mainScreen].bounds;
-
+    [self.view addSubview:mV];
+    //mV.frame=view3.bounds;
+    [mV setBackgroundColor:[UIColor grayColor]];
+    [mV setFrame:CGRectMake(100, 100, 50, 50)];
+    [mV drawRect:CGRectMake(100,100,50,50)];
+    
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -244,7 +248,7 @@
         {
 
             for (CBCharacteristic * characteristic in [service characteristics])
-            {            //NSLog(@"Blah!!");
+            {
                 [_selectedPeripheral setNotifyValue:true forCharacteristic:characteristic];
             }
         }
@@ -276,8 +280,7 @@
             //  BIT: 1=MOTOR B DIR
             //  BIT: 0=MOTOR A DIR
             NSUInteger controlByte = 0;
-            
-            //NSLog(@"Begin: %i", controlByte);
+        
             
             //Steer value is negative number.
             if(steeringValue < 0)
@@ -285,8 +288,6 @@
                 // Set the reverse bit.
                 controlByte |= 1 << 0;
                 steeringValue = (steeringValue * -1);
-                //NSLog(@"%i", controlByte);
-                NSLog(@"STEER -");
             }
             
             // Acceleration value is a negative number.
@@ -295,8 +296,6 @@
                 // Set the reverse bit.
                 controlByte |= 1 << 1;
                 accelerationValue = (accelerationValue * -1);
-                //NSLog(@"%i", controlByte);
-                NSLog(@"ACCEL -");
             }
 
             // If steer motor is greater than 127.
@@ -305,8 +304,6 @@
                 controlByte |= 1 << 2;
                 // Remove excess from text.label
                 steeringValue -= 128;
-                //NSLog(@"%i", controlByte);
-                NSLog(@"STEER +127");
             }
 
             // If steer motor is greater than 127.
@@ -315,8 +312,6 @@
                 controlByte |= 1 << 3;
                 // Remove excess from text.label
                 accelerationValue -= 128;
-                //NSLog(@"%x", controlByte);
-                NSLog(@"ACCEL +127");
             }
             
             //NSLog(@"After: %i", controlByte);
@@ -333,6 +328,7 @@
             int rssiRawValue = [_selectedPeripheral.RSSI integerValue];
             rssiRawValue = rssiRawValue * -1;
             float rssiColorValue = [numberMapper mapNumber:rssiRawValue minimumIn:55 maximumIn:100 mimimumOut:0 maximumOut:1];
+
             NSLog(@"%f", [numberMapper mapNumber:rssiRawValue minimumIn:50 maximumIn:110 mimimumOut:0 maximumOut:1]);
 
             /////////End Convert RSSI Data to Color //////////////////////
@@ -343,8 +339,6 @@
             
             NSString * strData = [[NSString alloc] initWithData:myData encoding:NSASCIIStringEncoding];
             
-            //NSLog(@"Control: %i Steer: %i, Acc: %i", controlByte, steeringValue, accelerationValue);
-            
             str = [NSString stringWithFormat:@"%@:", strData];
             
             if ([self.rxData  isEqual: @""]) {
@@ -352,13 +346,8 @@
                 self.rxData = 0;
             }
             
-            //NSLog(@"%i", [str length]);
-            
             [_selectedPeripheral writeValue:[str dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:characteristic type:CBCharacteristicWriteWithoutResponse];
                 self.rxData = @" ";
-            
-            //counter++;
-            //NSLog(@"%i", counter);
         }
     }
 }
@@ -497,8 +486,6 @@
 // Slider changes value.
 - (IBAction)steerSlider:(id)sender {
     
-
-    
     // Round the float.
     steeringValue = lroundf(self.steerSlider.value);
     
@@ -518,7 +505,6 @@
   
     // Enlarge thumb tracker image.
     [self.steerSlider setThumbImage:[UIImage imageNamed:@"track-thumb-grown.png"] forState:UIControlStateNormal];
-    
 }
 
 // User touches up inside Steer slider.
