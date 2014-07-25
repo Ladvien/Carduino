@@ -10,26 +10,28 @@
 
 @implementation drawView
 
-
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
     }
+    
+    
+
     return self;
 }
 
-
-- (void)drawRect:(CGRect)rect {
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetLineWidth(context, 4.0);
-    CGContextSetStrokeColorWithColor(context,[UIColor blueColor].CGColor);
-    CGRect rectangle = CGRectMake(5,5,50,50);
-    CGContextAddEllipseInRect(context, rectangle);
-    CGContextStrokePath(context);
-    NSLog(@"Blah!!");
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect
+{
+    // Drawing code
 }
+*/
+- (void)drawRect:(CGRect)rect
+{
 
-
+}
 @end

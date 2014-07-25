@@ -15,12 +15,11 @@
 @property (strong, nonatomic) CBCentralManager *centralManager;
 @property (strong, nonatomic) NSMutableDictionary *devices;
 @property (strong, nonatomic) CBPeripheral *discoveredPeripheral;
-@property (strong, nonatomic) NSMutableData *data;
 @property (strong, nonatomic) CBPeripheral *selectedPeripheral;
-@property (strong, nonatomic) CBCharacteristic *characteristics;
 @property (readonly, nonatomic) CFUUIDRef UUID;
+@property (strong, nonatomic) CBCharacteristic *characteristics;
+@property (strong, nonatomic) NSMutableData *data;
 
-@property (strong, nonatomic) CBPeripheral *connectdPeri;
 
 -(float)mapNumber: (float)x minimumXIn:(float)minXIn maximumXIn:(float)maxXIn mimimumXOut:(float)minXOut maximumXOut:(float)maxXOut;
 

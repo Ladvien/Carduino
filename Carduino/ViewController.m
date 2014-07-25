@@ -16,10 +16,6 @@
 #import "drawView.h"
 @interface ViewController ()
 
-{
-  // ----->  drawView *drawView;
-}
-
 @property (nonatomic, retain) NSString *rxData;
 @property int previousAccelerationSlider;
 @property int counter;
@@ -37,8 +33,6 @@
 @property (strong, nonatomic) IBOutlet UISlider *steerSlider;
 @property (strong, nonatomic) IBOutlet UISlider *accelerationSlider;
 @property (strong, nonatomic) IBOutlet UILabel *accelerationLabel;
-
-
 @property (strong, nonatomic) IBOutlet UIView *devicesView;
 @property (strong, nonatomic) IBOutlet UILabel *RSSI;
 @property (strong, nonatomic) IBOutlet UILabel *rxDataLabel;
@@ -50,6 +44,7 @@
 //BLE
 @property (strong, nonatomic) IBOutlet UIButton *scanForDevices;
 
+// Bytes used for switch-array.
 @property (assign) uint8_t accelerationByte;
 @property (assign) uint8_t steeringByte;
 
@@ -68,19 +63,10 @@
 
 // Menu
 - (IBAction)menuButtonTouchUp:(id)sender;
-
-
-
-
 @end
 
 @implementation ViewController
-{
-    NSArray *deviceList;
-}
-@synthesize centralManager = _centralManager;
-@synthesize devices = _devices;
-@synthesize characteristics = _characteristics;
+
 
 - (void)viewDidLoad
 {
@@ -126,7 +112,7 @@
     [self.view addSubview:mV];
     //mV.frame=view3.bounds;
     [mV setBackgroundColor:[UIColor grayColor]];
-    [mV setFrame:CGRectMake(100, 100, 50, 50)];
+    [mV setFrame:CGRectMake(0, 0, 50, 50)];
     [mV drawRect:CGRectMake(100,100,50,50)];
     
 }
@@ -162,28 +148,8 @@
         //If it's on, scan for devices.
         [_centralManager scanForPeripheralsWithServices:nil options:nil];
     }
-}
-
-// Report what devices have been found.
-- (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
-{
-    // Set peripheral.
-    _discoveredPeripheral = peripheral;
-    
-    // Create a string for the conneceted peripheral.
-    NSString * uuid = [[peripheral identifier] UUIDString];
-    
-    if (uuid) //Make sure we got the UUID.
-    {
-        //This sets the devices object.peripheral = uuid
-        [self.devices setObject:peripheral forKey:uuid];
-    }
-    
-    // Discover services for peripheral.
-    [peripheral discoverServices:nil];
-    
-    //Refresh data in the table.
-    [self.tableView reloadData];
+    //NSLog(@"One  -- centralManagerDidUpdateState");
+    //NSLog(@"One");
 }
 
 - (NSMutableDictionary *)devices
@@ -198,57 +164,83 @@
     return _devices;
 }
 
-- (void)setCentralManager:(CBCentralManager *)myCentralManager
+// Report what devices have been found.
+- (void)centralManager:(CBCentralManager *)central
+ didDiscoverPeripheral:(CBPeripheral *)peripheral
+     advertisementData:(NSDictionary *)advertisementData
+                  RSSI:(NSNumber *)RSSI
 {
-    //NSLog(@"setCentralManager");
+    // Set peripheral.
+    _discoveredPeripheral = peripheral;
     
+    // Create a string for the conneceted peripheral.
+    NSString * uuid = [[peripheral identifier] UUIDString];
+    
+    if (uuid) //Make sure we got the UUID.
+    {
+        //This sets the devices object.peripheral = uuid
+        [self.devices setObject:peripheral forKey:uuid];
+    }
+    
+    //Refresh data in the table.
+    [self.tableView reloadData];
+    
+    //NSLog(@"centralManager didDiscoverPeripheral");
+    //NSLog(@"Two -- centralManager didDiscoverPeripheral");
 }
 
+// Run this whenever we have connected to a device.
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
-    // Run this whenever we have connected to a device.
-    NSLog(@"Connected");
-    // Set the peripheral to ???
-    peripheral.delegate = self;
-    // Set the peripheral method's discoverServices to nil.
-    // Does this keep the code from looking for new devices?
-    [peripheral discoverServices:nil];
     
+    // Set the peripheral delegate.
+    peripheral.delegate = self;
+    // Set the peripheral method's discoverServices to nil,
+    // this searches for all services, its slower but inclusive.
+    [peripheral discoverServices:nil];
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
 {
+    // Enumerate through all services on the connected peripheral.
     for (CBService * service in [peripheral services])
     {
+        // Discover all characteristics for this service.
         [_selectedPeripheral discoverCharacteristics:nil forService:service];
     }
 }
 
-- (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
+- (void)peripheral:(CBPeripheral *)peripheral
+didDiscoverCharacteristicsForService:(CBService *)service
+             error:(NSError *)error
 {
+    // Enumerate through all services on the connected peripheral.
     for (CBCharacteristic * character in [service characteristics])
     {
+        // Discover all descriptors for each characteristic.
         [_selectedPeripheral discoverDescriptorsForCharacteristic:character];
     }
 }
 
-- (void)peripheral:(CBPeripheral *)peripheral didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+- (void)peripheral:(CBPeripheral *)peripheral
+didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic
+             error:(NSError *)error
 {
     //Store data from the UUID in byte format, save in the bytes variable.
     const char * bytes =[(NSData*)[[characteristic UUID] data] bytes];
-    //Check to see if it is two bytes long, and they are both FF, FF.
+    //Check to see if it is two bytes long, and they are FF and E1.
     if (bytes && strlen(bytes) == 2 && bytes[0] == (char)255 && bytes[1] == (char)225)
     {
-        NSLog(@"%s", bytes);
-        //Stop the search animation
-        //Setup a MainViewController reference
-        //?
-        //Send the peripheral data to the MainViewController.
+        // Send the peripheral data to the MainViewController.
         _selectedPeripheral = peripheral;
         for (CBService * service in [_selectedPeripheral services])
         {
 
             for (CBCharacteristic * characteristic in [service characteristics])
             {
+                // For every characteristic on every service, on the connected peripheral
+                // set the setNotifyValue to true.
+                NSLog(@"%c", bytes[1]);
+                
                 [_selectedPeripheral setNotifyValue:true forCharacteristic:characteristic];
             }
         }
@@ -320,33 +312,20 @@
             // Headlights
             //controlByte |= 1 << 4;
             
-            
-            //////////// Convert RSSI Data to Color //////////////////////
-            
-            ViewController * numberMapper = [[ViewController alloc] init];
-            [_selectedPeripheral readRSSI];
-            int rssiRawValue = [_selectedPeripheral.RSSI integerValue];
-            rssiRawValue = rssiRawValue * -1;
-            float rssiColorValue = [numberMapper mapNumber:rssiRawValue minimumIn:55 maximumIn:100 mimimumOut:0 maximumOut:1];
-
-            NSLog(@"%f", [numberMapper mapNumber:rssiRawValue minimumIn:50 maximumIn:110 mimimumOut:0 maximumOut:1]);
-
-            /////////End Convert RSSI Data to Color //////////////////////
-            
+            // Load all the data into myData.
             [myData appendBytes:&controlByte length:sizeof(unsigned char)];
             [myData appendBytes:&steeringValue length:sizeof(unsigned char)];
             [myData appendBytes:&accelerationValue length:sizeof(unsigned char)];
             
+            // Create a string with all the data, formatted in ASCII.
             NSString * strData = [[NSString alloc] initWithData:myData encoding:NSASCIIStringEncoding];
-            
+            // Add the end-of-transmission character to allow the
+            // Arduino to parse the string
             str = [NSString stringWithFormat:@"%@:", strData];
             
-            if ([self.rxData  isEqual: @""]) {
-                //NSLog(@"RX CHECK!");
-                self.rxData = 0;
-            }
-            
-            [_selectedPeripheral writeValue:[str dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:characteristic type:CBCharacteristicWriteWithoutResponse];
+            // Write the str variable with all our movement data.
+            [_selectedPeripheral writeValue:[str dataUsingEncoding:NSUTF8StringEncoding]
+            forCharacteristic:characteristic type:CBCharacteristicWriteWithoutResponse];
                 self.rxData = @" ";
         }
     }
@@ -687,6 +666,8 @@
 - (IBAction)test:(id)sender
 {
     [self sendValue:[NSString stringWithFormat:@"%c:", 250]];
+    NSLog(@"Devices: %@", _devices);
+    NSLog(@"%i", [_devices count]);
 }
 
 - (void)fadeDeviceMenuIn;

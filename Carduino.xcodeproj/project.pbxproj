@@ -23,7 +23,7 @@
 		2002FB721955EF38009F9741 /* CarduinoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2002FB711955EF38009F9741 /* CarduinoTests.m */; };
 		20B3A228195B947F009C18FD /* CarduinoViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B3A227195B947F009C18FD /* CarduinoViewCell.m */; };
 		20B3A22B195B9496009C18FD /* iPadCarduinoTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20B3A22A195B9496009C18FD /* iPadCarduinoTableCell.xib */; };
-		20BC6EDB196C9081009BD993 /* drawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BC6EDA196C9081009BD993 /* drawView.m */; };
+		20D8EFF419760DD40047A065 /* drawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20D8EFF319760DD40047A065 /* drawView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,8 +59,8 @@
 		20B3A227195B947F009C18FD /* CarduinoViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarduinoViewCell.m; sourceTree = "<group>"; };
 		20B3A229195B948F009C18FD /* CarduinoViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CarduinoViewCell.h; sourceTree = "<group>"; };
 		20B3A22A195B9496009C18FD /* iPadCarduinoTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iPadCarduinoTableCell.xib; sourceTree = "<group>"; };
-		20BC6ED9196C9081009BD993 /* drawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = drawView.h; sourceTree = "<group>"; };
-		20BC6EDA196C9081009BD993 /* drawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = drawView.m; sourceTree = "<group>"; };
+		20D8EFF219760DD40047A065 /* drawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = drawView.h; sourceTree = "<group>"; };
+		20D8EFF319760DD40047A065 /* drawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = drawView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,8 +135,8 @@
 		2002FB4A1955EF38009F9741 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				20BC6ED9196C9081009BD993 /* drawView.h */,
-				20BC6EDA196C9081009BD993 /* drawView.m */,
+				20D8EFF219760DD40047A065 /* drawView.h */,
+				20D8EFF319760DD40047A065 /* drawView.m */,
 				2002FB4B1955EF38009F9741 /* Carduino-Info.plist */,
 				2002FB4C1955EF38009F9741 /* InfoPlist.strings */,
 				2002FB4F1955EF38009F9741 /* main.m */,
@@ -272,7 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2002FB5D1955EF38009F9741 /* ViewController.m in Sources */,
-				20BC6EDB196C9081009BD993 /* drawView.m in Sources */,
+				20D8EFF419760DD40047A065 /* drawView.m in Sources */,
 				20B3A228195B947F009C18FD /* CarduinoViewCell.m in Sources */,
 				2002FB541955EF38009F9741 /* AppDelegate.m in Sources */,
 				2002FB501955EF38009F9741 /* main.m in Sources */,
