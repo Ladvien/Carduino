@@ -10,6 +10,6 @@ Also, if any others are poly-OSers,
 [HM-1X Aid (Windows GUI for the HM-10 / 11)](https://github.com/Ladvien/HM-1X_Aid_v01)
 
 Hardware info,
-[HM-10 Info](http://ladvien.github.io/robots/HM10/)
+[HM-10 Hardware](http://ladvien.github.io/robots/HM10/)
 
 ![alt tag](https://raw.githubusercontent.com/Ladvien/ladvien.github.io/master/images/HM-10-2.jpg)
